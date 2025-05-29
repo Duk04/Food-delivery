@@ -39,7 +39,10 @@ export const CreateEmail = () => {
           validationSchema={SignupSchema}
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
-              await signUp(values);
+              const response = await signUp(values);
+              if (response.token) {
+                localStorage.setItem("token", response.token);
+              }
               push("/");
             } catch (err: any) {
               setErrors({

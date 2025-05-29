@@ -31,5 +31,5 @@ foodRouter
     authenticateUser,
     authorization(UserRoleEnum.ADMIN),
     foodDetailChangeController
-  )
-  .get(foodGetCategoryIdController);
+  );
+foodRouter.get("/all", foodGetCategoryIdController);

@@ -7,8 +7,13 @@ export const signUp = async (data: { email: string; password: string }) => {
   return res.data;
 };
 
-export const signIn = async (data: { email: string; password: string }) => {
+export const signIn = async (data: {
+  email: string;
+  password: string;
+  token: string;
+}) => {
   const res = await axios.post(`${BASE_URL}/sign-in`, data);
+
   return res.data;
 };
 

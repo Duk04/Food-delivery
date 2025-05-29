@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UserModel } from "../models";
-import { verifyToken, generateNewToken } from "../utils";
+import { verifyToken } from "../utils";
 
 export const authenticateUser = async (
   req: Request,
@@ -9,38 +9,35 @@ export const authenticateUser = async (
 ) => {
   const authorization = req.headers.authorization;
 
-  const token = authorization?.split(" ")[1];
-  if (!authorization) {
-    res
-      .status(400)
-      .send({ message: "Unauthorized user. Authorization token is inviled" });
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    res.status(401).send({
+      message: "Unauthorized: Authorization token is missing or malformed",
+    });
     return;
   }
 
-  if (!token) {
-    res
-      .status(400)
-      .send({ message: "Unautherized user. Authorization token is missing" });
+  const token = authorization.split(" ")[1];
+
+  try {
+    const decodedToken = verifyToken(token) as { userId: string };
+
+    if (!decodedToken || !decodedToken.userId) {
+      res.status(401).send({ message: "Unauthorized: Invalid token payload" });
+      return;
+    }
+
+    const existingUser = await UserModel.findById(decodedToken.userId);
+
+    if (!existingUser) {
+      res.status(404).send({ message: "User not found" });
+      return;
+    }
+
+    req.body.user = existingUser;
+
+    next();
+  } catch (err) {
+    res.status(401).send({ message: "Unauthorized: Invalid token" });
     return;
   }
-
-  const decodedToken = verifyToken(token) as { userId: string };
-
-  if (!decodedToken || !decodedToken.userId) {
-    res
-      .status(400)
-      .send({ message: "Unuathorized user. Bad request or token is inviler" });
-    return;
-  }
-
-  const existingUser = await UserModel.findById(decodedToken.userId);
-
-  if (!existingUser) {
-    res.status(400).send({ message: "User not found" });
-    return;
-  }
-
-  req.body.user = existingUser;
-
-  next();
 };

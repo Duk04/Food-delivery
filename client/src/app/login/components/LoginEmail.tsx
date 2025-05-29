@@ -9,8 +9,6 @@ import { ChevronLeft } from "lucide-react";
 import { signIn } from "@/utils/Emailcontroller";
 
 export const LoginEmail = () => {
-  const [email, setEmail] = useState("");
-  const [isValid, setIsValid] = useState(true);
   const SignupSchema = Yup.object().shape({
     email: Yup.string()
       .email("Please enter a valid email address")
@@ -22,15 +20,6 @@ export const LoginEmail = () => {
 
   const { push } = useRouter();
 
-  const checkEmail = (value: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsValid(regex.test(value));
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    checkEmail(e.target.value);
-  };
   return (
     <div className="flex items-center justify-center">
       <div className="w-[416px] flex flex-col gap-5">
@@ -101,7 +90,7 @@ export const LoginEmail = () => {
         </Formik>
 
         <div className="flex items-center justify-center gap-3 text-[16px]">
-          Don’t have an account?{" "}
+          Don’t have an account?
           <p
             className="text-[#2563EB] hover:cursor-pointer"
             onClick={() => push("/signup")}

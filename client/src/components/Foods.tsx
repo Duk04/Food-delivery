@@ -8,12 +8,17 @@ type FoodCategory = {
 };
 
 type FoodMenu = {
-  _id: string;
+  _id: string | null;
   categoryName: FoodCategory[];
   foodName: string;
   price: number;
   image: string;
   ingredients: string;
+  category: string[];
+};
+
+type AllFoods = {
+  getAllFood: FoodMenu[];
 };
 
 export const Foods = () => {
@@ -24,34 +29,37 @@ export const Foods = () => {
     const fetchData = async () => {
       const [catRes, foodRes] = await Promise.all([
         axios.get<FoodCategory[]>("http://localhost:8000/food-category"),
-        axios.get<FoodMenu[]>("http://localhost:8000/food"),
+        axios.get<AllFoods>("http://localhost:8000/food-category/categoryId"),
       ]);
       setCategories(catRes.data);
-      setFoods(foodRes.data);
+      setFoods(foodRes.data.getAllFood);
     };
     fetchData();
   }, []);
 
-  console.log(foods);
-  console.log(categories);
   return (
     <div>
       {categories.map((category) => (
         <div key={category._id}>
           <h2>{category.categoryName}</h2>
           <ul>
-            {Array.isArray(foods) &&
-              foods
-                .filter((food) =>
-                  food.categoryName.some(
-                    (cat) => cat._id === category.categoryName
-                  )
-                )
-                .map((food) => (
-                  <li key={food._id}>
-                    <img src={`food.image`} alt="" />
-                  </li>
-                ))}
+            {foods
+              .filter((food) => (food.category ?? []).includes(category._id))
+              .map((food) => (
+                <li
+                  key={food._id}
+                  className="border rounded-lg p-4 shadow-sm bg-white"
+                >
+                  <img
+                    src={food.image}
+                    alt={food.foodName}
+                    className="w-full h-32 object-cover mb-2 rounded"
+                  />
+                  <h3 className="text-lg font-semibold">{food.foodName}</h3>
+                  <p className="text-sm text-gray-600">{food.ingredients}</p>
+                  <p className="text-black font-medium">${food.price}</p>
+                </li>
+              ))}
           </ul>
         </div>
       ))}

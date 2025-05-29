@@ -9,23 +9,32 @@ export type FoodBody = {
 };
 
 export const FoodMenuController = async (req: Request, res: Response) => {
-  const { foodName, price, image, ingredients, categoryName } =
-    req.body as FoodBody;
+  try {
+    const { foodName, price, image, ingredients, categoryName } =
+      req.body as FoodBody;
 
-  if (!foodName || !price || !image || !ingredients) {
-    res.status(400).send({ message: "Provide all details" });
+    if (!foodName || !price || !image || !ingredients || !categoryName) {
+      res.status(400).send({ message: "Provide all details" });
+      return;
+    }
+
+    const existingFood = await FoodModel.findOne({ foodName });
+    if (existingFood) {
+      res.status(409).send({ message: "Food already exists" });
+      return;
+    }
+
+    await FoodModel.create({
+      foodName,
+      price,
+      image,
+      ingredients,
+      categoryName,
+    });
+
+    res.status(201).send({ message: "Success" });
+  } catch (error) {
+    console.error("Error in FoodMenuController:", error);
+    res.status(500).send({ message: "Internal Server Error" });
   }
-  const existingFood = await FoodModel.findOne({ foodName });
-  if (existingFood) {
-    res.status(409).send({ message: "Food already exists" });
-    return;
-  }
-  await FoodModel.create({
-    foodName,
-    price,
-    image,
-    ingredients,
-    categoryName,
-  });
-  res.status(201).send({ message: "Success" });
 };

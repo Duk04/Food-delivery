@@ -7,12 +7,15 @@ import axios from "axios";
 const BASE_URL = "http://localhost:8000/auth";
 
 type AuthContextType = {
-  signUp: (data: { email: string; password: string }) => Promise<any>;
-  signIn: (data: { email: string; password: string }) => Promise<any>;
-  verifyUser: (token: string) => Promise<any>;
-  requestPasswordReset: (email: string) => Promise<any>;
-  verifyResetToken: (token: string) => Promise<any>;
-  resetPassword: (data: { token: string; newPassword: string }) => Promise<any>;
+  signUp: (data: { email: string; password: string }) => Promise<string>;
+  signIn: (data: { email: string; password: string }) => Promise<string>;
+  verifyUser: (token: string) => Promise<string>;
+  requestPasswordReset: (email: string) => Promise<string>;
+  verifyResetToken: (token: string) => Promise<string>;
+  resetPassword: (data: {
+    token: string;
+    newPassword: string;
+  }) => Promise<string>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);

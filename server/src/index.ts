@@ -15,11 +15,12 @@ connectDatabase();
 
 const port = 8000;
 
-app.use(cors());
 app.use(express.json());
+app.use(cors());
+
 app.use("/auth", authRouter);
-app.use("/food", foodRouter);
 app.use("/food-category", FoodCategoryRouther);
+app.use("/food", foodRouter);
 app.use("/food-order", FoodOrderRouter);
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

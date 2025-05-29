@@ -20,7 +20,7 @@ export const Footer = () => {
 
   useEffect(() => {
     axios
-      .get<FoodCategory[]>(`${BASE_URL}food-category`)
+      .get<FoodCategory[]>(`http://localhost:8000/food-category`)
       .then((res) => {
         setData(res.data);
         setLoading(false);
@@ -81,7 +81,7 @@ export const Footer = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-4">
-                <h1>si</h1>
+                <h1></h1>
                 {data?.slice(5, 10).map((cat) => (
                   <p
                     key={cat._id}
@@ -94,7 +94,6 @@ export const Footer = () => {
             </div>
           </div>
           <div className="flex flex-col items-center gap-4">
-            <h1 className="text-[#71717A] text-[16px]">Menu</h1>
             <div className="flex gap-4">
               <FacebookIcon className="text-white" />
               <InstagramIcon className="text-white" />
