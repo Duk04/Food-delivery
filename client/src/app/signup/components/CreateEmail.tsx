@@ -44,10 +44,28 @@ export const CreateEmail = () => {
                 localStorage.setItem("token", response.token);
               }
               push("/");
-            } catch (err: any) {
-              setErrors({
-                email: err.response?.data?.message || "Signup failed",
-              });
+            } catch (err: unknown) {
+              if (
+                err &&
+                typeof err === "object" &&
+                "response" in err &&
+                err.response &&
+                typeof err.response === "object" &&
+                "data" in err.response &&
+                err.response.data &&
+                typeof err.response.data === "object" &&
+                "message" in err.response.data
+              ) {
+                setErrors({
+                  email:
+                    (err.response as { data?: { message?: string } }).data
+                      ?.message || "Signup failed",
+                });
+              } else {
+                setErrors({
+                  email: "Signup failed",
+                });
+              }
             } finally {
               setSubmitting(false);
             }
