@@ -4,7 +4,7 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000/auth";
+const BASE_URL = process.env.BASE_URL;
 
 type AuthContextType = {
   signUp: (data: { email: string; password: string }) => Promise<string>;

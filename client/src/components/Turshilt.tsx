@@ -15,7 +15,7 @@ export const Turshilt = () => {
 
   useEffect(() => {
     axios
-      .get<FoodCategory[]>("http://localhost:8000/food-category")
+      .get<FoodCategory[]>(`${process.env.BASE_URL}/food-category`)
       .then((res) => {
         setData(res.data);
         setLoading(false);

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import useSWR from "swr";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,6 @@ import {
   DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Cagliostro } from "next/font/google";
-import useSWRMutation from "swr/mutation";
-import { mutate } from "swr";
-import { boolean } from "yup";
 
 type FoodCategory = {
   _id: string;
@@ -35,11 +31,10 @@ export const CategoriesForAdmin = () => {
   const fetcher = (url: string) =>
     axios.get<AllFoodCategories>(url).then((res) => res.data);
 
-  const {
-    data: swrData,
-    error: swrError,
-    isLoading,
-  } = useSWR<AllFoodCategories>("http://localhost:8000/food-category", fetcher);
+  const { data: swrData, error: swrError } = useSWR<AllFoodCategories>(
+    `${process.env.BASE_URL}/food-category`,
+    fetcher
+  );
 
   const handleAddCategory = async () => {
     if (!categoryName.trim()) return;
@@ -49,7 +44,7 @@ export const CategoriesForAdmin = () => {
       setISOpen(true);
       console.log({ token });
       await axios.post(
-        "http://localhost:8000/food-category",
+        `${process.env.BASE_URL}/food-category`,
         { categoryName },
         {
           headers: {
@@ -61,7 +56,7 @@ export const CategoriesForAdmin = () => {
       setCategoryName("");
       setISOpen(false);
     } catch (err) {
-      console.error("Failed to add category:", swrError);
+      console.error("Failed to add category:", swrError, err);
     }
   };
   return (

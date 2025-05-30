@@ -25,7 +25,7 @@ export const FoodByCategory = () => {
     data: categories = [],
     error,
     isLoading,
-  } = useSWR("http://localhost:8000/food/all", fetcher);
+  } = useSWR(`${process.env.BASE_URL}/food/all`, fetcher);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data.</div>;

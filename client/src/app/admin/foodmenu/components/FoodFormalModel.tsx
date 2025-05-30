@@ -4,17 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { XMarkIcon, TrashIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { url } from "inspector";
+
 import { Image as ImageIcon } from "lucide-react";
 import { useState, useEffect, ChangeEvent } from "react";
-import Image from "next/image";
+
+type FoodItem = {
+  _id?: string;
+  foodName: string;
+  price: number;
+  ingredients: string;
+  image: string;
+};
+
 type FoodFormProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: any) => void;
-  initialData?: any;
+  onSubmit: (
+    data: FoodItem & {
+      categoryId: string;
+    }
+  ) => Promise<void>;
+  initialData?: FoodItem;
   categoryId: string;
-  // handleDelete: (data: any) => void;
 };
 
 export const FoodFormModal = ({
@@ -23,8 +34,7 @@ export const FoodFormModal = ({
   onSubmit,
   initialData,
   categoryId,
-}: // handleDelete,
-FoodFormProps) => {
+}: FoodFormProps) => {
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     foodName: "",
@@ -35,7 +45,12 @@ FoodFormProps) => {
 
   useEffect(() => {
     if (initialData) {
-      setForm(initialData);
+      setForm({
+        foodName: initialData.foodName,
+        price: initialData.price !== undefined ? String(initialData.price) : "",
+        ingredients: initialData.ingredients,
+        image: initialData.image,
+      });
     } else {
       setForm({
         foodName: "",
@@ -108,8 +123,12 @@ FoodFormProps) => {
     );
     if (!confirmDelete) return;
 
+    if (!initialData || !initialData._id) {
+      alert("No food item selected to delete.");
+      return;
+    }
     try {
-      await axios.delete(`http://localhost:8000/food/${initialData._id}`, {
+      await axios.delete(`${process.env.BASE_URL}/food/${initialData._id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,40 +1,41 @@
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-  } from "@/components/ui/dialog"
-  import { Button } from "@/components/ui/button"
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
-  type OrderStatus = "pending" | "delivered" | "canceled"
-  
-  export const StatusChangeDialog = ({
-    open,
-    onOpenChange,
-    selected,
-    onSave,
-    statusChange,
-    setStatusChange,
-  }: {
-    open: boolean
-    onOpenChange: (open: boolean) => void
-    selected: string[]
-    onSave: () => void
-    statusChange: OrderStatus | ""
-    setStatusChange: (status: OrderStatus | "") => void
-  }) => {
-    return (
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle className="flex justify-between items-center">
-              Change delivery state
-            </DialogTitle>
-          </DialogHeader>
-  
-          <div className="flex justify-center gap-3 my-4">
-            {(["delivered", "pending", "canceled"] as OrderStatus[]).map((status) => (
+type OrderStatus = "pending" | "delivered" | "canceled";
+
+export const StatusChangeDialog = ({
+  open,
+  onOpenChange,
+
+  onSave,
+  statusChange,
+  setStatusChange,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  selected: string[];
+  onSave: () => void;
+  statusChange: OrderStatus | "";
+  setStatusChange: (status: OrderStatus | "") => void;
+}) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle className="flex justify-between items-center">
+            Change delivery state
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="flex justify-center gap-3 my-4">
+          {(["delivered", "pending", "canceled"] as OrderStatus[]).map(
+            (status) => (
               <Button
                 key={status}
                 variant={statusChange === status ? "default" : "outline"}
@@ -49,20 +50,20 @@ import {
               >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
               </Button>
-            ))}
-          </div>
-  
-          <DialogFooter>
-            <Button
-              className="w-full bg-black text-white hover:bg-gray-900"
-              disabled={!statusChange}
-              onClick={onSave}
-            >
-              Save
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    )
-  }
-  
+            )
+          )}
+        </div>
+
+        <DialogFooter>
+          <Button
+            className="w-full bg-black text-white hover:bg-gray-900"
+            disabled={!statusChange}
+            onClick={onSave}
+          >
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};

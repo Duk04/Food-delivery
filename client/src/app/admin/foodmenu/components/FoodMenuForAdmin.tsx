@@ -5,11 +5,9 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { PlusIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { FoodFormModal } from "./FoodFormalModel";
-import { previousDay } from "date-fns";
-import { Playwrite_DE_SAS } from "next/font/google";
 
 type Food = {
-  _id: string;
+  _id?: string;
   foodName: string;
   price: number;
   image: string;
@@ -27,27 +25,34 @@ const fetcher = (url: string) =>
 
 export const FoodMenuForAdmin = () => {
   const { data: categories = [], mutate } = useSWR<CategoryWithFoods[]>(
-    "http://localhost:8000/food/all",
+    `${process.env.BASE_URL}/food/all`,
     fetcher
   );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState<Food | null>(null);
   const [categoryId, setCategoryId] = useState("");
-  const [error, setError] = useState<string | null>(null);
+
   const handleOpenModal = (food: Food | null, categoryId: string) => {
     setEditData(food);
     setCategoryId(categoryId);
     setModalOpen(true);
   };
 
-  const handleSubmit = async (data: CategoryWithFoods) => {
+  const handleSubmit = async (
+    data: { price: string | number } & Food & { categoryId: string }
+  ) => {
     const token =
       typeof window !== "undefined" && localStorage.getItem("token");
+    const payload = {
+      ...data,
+      price: typeof data.price === "string" ? Number(data.price) : data.price,
+      categoryId: data.categoryId,
+    };
     if (editData) {
       await axios.patch(
-        `http://localhost:8000/food/${editData._id}`,
-        { ...data, categoryName: categoryId },
+        `${process.env.BASE_URL}/food/${editData._id}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,15 +60,11 @@ export const FoodMenuForAdmin = () => {
         }
       );
     } else {
-      await axios.post(
-        "http://localhost:8000/food/food-menu",
-        { ...data, categoryName: categoryId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post(`${process.env.BASE_URL}/food/food-menu`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
     }
     setModalOpen(false);
     setEditData(null);

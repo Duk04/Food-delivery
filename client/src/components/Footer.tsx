@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Turshilt } from "./Turshilt";
+
 import { FacebookIcon, InstagramIcon } from "lucide-react";
 
 type FoodCategory = {
@@ -15,20 +15,14 @@ type FoodCategory = {
 export const Footer = () => {
   const { push } = useRouter();
   const [data, setData] = useState<FoodCategory[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     axios
-      .get<FoodCategory[]>(`http://localhost:8000/food-category`)
+      .get<FoodCategory[]>(`${process.env.BASE_URL}/food-category`)
       .then((res) => {
         setData(res.data);
-        setLoading(false);
       })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+      .catch((err) => {});
   }, []);
 
   return (

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,15 +32,17 @@ export const LoginEmail = () => {
           </p>
         </div>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "", password: "", token: "" }}
           validationSchema={SignupSchema}
           onSubmit={async (values, { setSubmitting, setErrors }) => {
             try {
               await signIn(values);
               push("/");
-            } catch (err: any) {
+            } catch (err) {
               setErrors({
-                email: err.response?.data?.message || "Signup failed",
+                email:
+                  (err as { response?: { data?: { message?: string } } })
+                    .response?.data?.message || "Signup failed",
               });
             } finally {
               setSubmitting(false);

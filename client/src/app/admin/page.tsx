@@ -61,7 +61,7 @@ export const AdminOrderDashboard = () => {
   const [statusEditOpen, setStatusEditOpen] = useState(false);
   const [statusChange, setStatusChange] = useState<OrderStatus | "">("");
   const [orders, setOrders] = useState<Order[]>([]);
-  const [error, setError] = useState<string | null>(null);
+
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date("2025-05-01"),
     to: new Date("2025-05-31"),
@@ -71,12 +71,11 @@ export const AdminOrderDashboard = () => {
     const getOrders = async () => {
       try {
         const res = await axios.get<AllOrder>(
-          "http://localhost:8000/food-order"
+          `${process.env.BASE_URL}food-order`
         );
         setOrders(res.data?.order);
       } catch (error) {
         if (error instanceof Error) {
-          setError(error.message);
         }
       }
     };

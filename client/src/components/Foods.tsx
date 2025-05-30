@@ -28,8 +28,8 @@ export const Foods = () => {
   useEffect(() => {
     const fetchData = async () => {
       const [catRes, foodRes] = await Promise.all([
-        axios.get<FoodCategory[]>("http://localhost:8000/food-category"),
-        axios.get<AllFoods>("http://localhost:8000/food-category/categoryId"),
+        axios.get<FoodCategory[]>(`${process.env.BASE_URL}/food-category`),
+        axios.get<AllFoods>(`${process.env.BASE_URL}/food-category/categoryId`),
       ]);
       setCategories(catRes.data);
       setFoods(foodRes.data.getAllFood);

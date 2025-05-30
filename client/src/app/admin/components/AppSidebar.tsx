@@ -1,4 +1,4 @@
-import { Settings, LayoutDashboard, Truck, HandPlatter } from "lucide-react";
+import { LayoutDashboard, Truck, HandPlatter } from "lucide-react";
 
 import {
   Sidebar,
