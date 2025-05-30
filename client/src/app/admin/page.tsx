@@ -71,9 +71,14 @@ export const AdminOrderDashboard = () => {
     const getOrders = async () => {
       try {
         const res = await axios.get<AllOrder>(
-          `${process.env.BASE_URL}food-order`
+          `${process.env.NEXT_PUBLIC_BASE_URL}food-order`
         );
-        setOrders(res.data?.order);
+        // Convert createdAt strings to Date objects
+        const ordersWithDates = res.data?.order.map((order) => ({
+          ...order,
+          createdAt: new Date(order.createdAt),
+        }));
+        setOrders(ordersWithDates);
       } catch (error) {
         if (error instanceof Error) {
         }
