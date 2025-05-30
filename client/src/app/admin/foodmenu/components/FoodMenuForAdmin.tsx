@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import { PlusIcon, PencilIcon } from "@heroicons/react/24/solid";
 import { FoodFormModal } from "./FoodFormalModel";
+import { previousDay } from "date-fns";
+import { Playwrite_DE_SAS } from "next/font/google";
 
 type Food = {
   _id: string;
@@ -32,7 +34,7 @@ export const FoodMenuForAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState<Food | null>(null);
   const [categoryId, setCategoryId] = useState("");
-
+  const [error, setError] = useState<string | null>(null);
   const handleOpenModal = (food: Food | null, categoryId: string) => {
     setEditData(food);
     setCategoryId(categoryId);
@@ -65,8 +67,35 @@ export const FoodMenuForAdmin = () => {
     }
     setModalOpen(false);
     setEditData(null);
+
     mutate();
   };
+
+  // const handleDelete = async (data: CategoryWithFoods) => {
+  //   const token =
+  //     typeof window !== "undefined" && localStorage.getItem("token");
+  //   if (!token) {
+  //     alert("You must be logged in to delete a food item.");
+  //     return;
+  //   }
+
+  //   const confirmDelete = window.confirm(
+  //     "Are you sure you want to delete this food item?"
+  //   );
+  //   if (!confirmDelete) return;
+
+  //   try {
+  //     await axios.delete(`http://localhost:8000/food/${editData._id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     alert("Food item deleted successfully!");
+  //   } catch (error) {
+  //     console.error("Error deleting food item:", error);
+  //     alert("Failed to delete food item.");
+  //   }
+  // };
 
   return (
     <div className="w-full flex flex-col gap-8 px-6 py-4">
