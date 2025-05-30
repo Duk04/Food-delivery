@@ -21,8 +21,7 @@ export const Footer = () => {
       .get<FoodCategory[]>(`${process.env.BASE_URL}/food-category`)
       .then((res) => {
         setData(res.data);
-      })
-      .catch((err) => {});
+      });
   }, []);
 
   return (
